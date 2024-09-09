@@ -10,12 +10,11 @@ import {
   } from "@/components/ui/card"
   import { ChevronRight, InfoIcon } from "lucide-react";
   import { Quote } from "lucide-react";
-  import { ChevronLeft } from "lucide-react";
+
   import { Button } from '@/components/ui/button';
 import { Section } from '@/components/Section';
 import { Spacing } from '@/components/Spacing';
-import { ArrowUpRight } from 'lucide-react';
-import ChangeQuoteBtn from '@/components/ChangeQuoteBtn';
+
 import { useMutation, useQuery } from '@tanstack/react-query'
 import * as z from "zod";
 import { QuotesResponseSchema } from '@/lib/quote.schema';
@@ -25,14 +24,15 @@ import { useQueryClient } from '@tanstack/react-query';
 import { SelectCategoryCitation } from './SelectCategoryCitation';
 import { shuffleCategoryQuote } from '@/lib/ShuffleCategory';
 import { tabCategoryQuote } from '@/lib/ShuffleCategory';
-// import useQuery from "react-query"
 import { Skeleton } from '@/components/ui/skeleton';
-import { Info } from 'lucide-react';
+import CopyPasteButton from '@/components/CopyPasteButton';
+import { useCopyToClipboard, useDarkMode } from "usehooks-ts";
+import { toast } from "sonner";
 export  type TypeQuotesResponseSchema = z.infer<typeof QuotesResponseSchema>
 
 export const CardQuote = ({categoryQuote}:{categoryQuote:string}) => {
   const [quotes,setQuotes] = React.useState<TypeQuotesResponseSchema | undefined>()
-  const {data,isLoading,isError} = useQuery({
+  const {data,isLoading,isError,status,isSuccess} = useQuery({
     queryFn:async () => {
     const resp =  await getQuotes(categoryQuote)
     setQuotes(resp)
@@ -47,8 +47,8 @@ export const CardQuote = ({categoryQuote}:{categoryQuote:string}) => {
   console.log(categoryQuote)
 
 const queryClient = useQueryClient()
-
-  console.log(data)
+// const { isDarkMode, toggle, enable, disable} = useDarkMode()
+ // console.log(data)
   const mutation = useMutation({
     mutationFn:async () => await getQuotes(categoryQuote),
 
@@ -62,7 +62,10 @@ const queryClient = useQueryClient()
   return (  
      <Section className='max-sm:mt-16 max-w-3xl flex flex-col gap-4 items-center justify-center h-auto '>
                    <Button 
-                   disabled={mutation.isPending || isLoading}
+                   disabled={
+                        isLoading ||
+                    mutation.isPending 
+                    }
                    className='bg-primary/80 dark:bg-primary'
                    onClick={()=> mutation.mutate()}
                    >
@@ -70,12 +73,31 @@ const queryClient = useQueryClient()
                    </Button>
          <Card  className="w-full bg-card border-accent border dark:bg-card-foreground">
           
- <CardContent className="pt-6">
+ <CardContent className="pt-4 px-7 pr-3 ">
+ {
+  isLoading ||
+  mutation.isPending ? (
+ null
+    ):
+     isError ||
+     mutation.isError ? (
+    null
+    ):(
+      
+      <CopyQuote  quote={quotes![0].quote} />
+    )}
+
+
+
    <div className="flex flex-col gap-4 items-center text-primary ">
      <Quote className="size-12 flex-shrink-0" />
-   {isLoading || mutation.isPending ? (
+   {
+   isLoading ||
+    mutation.isPending ? (
      <SkeletonCardQuote />
-    ):isError || mutation.isError ? (
+    ):
+     isError || 
+    mutation.isError ? (
       <div className='flex gap-2 justify-center items-center'>
       <InfoIcon className='size-5' />
     <div>Failed to load or generate quotes.</div> 
@@ -83,7 +105,7 @@ const queryClient = useQueryClient()
     ):(
       quotes?.map((q,index)=>(
         <>
-          <p className="border-l-2 pl-6 italic text-primary ">
+          <p className="border-primary border-l-2 pl-6 italic text-primary ">
           {q.quote}
     </p>
    
@@ -132,5 +154,27 @@ export const SkeletonCardQuote = () =>{
   
    
    </>
+  )
+}
+const CopyQuote = ({quote}:{quote:string}) =>{
+  const [copiedText, copy] = useCopyToClipboard();
+  return (
+    <div className='flex'>
+      <div className='flex-1' />
+      <div onClick={() =>{ 
+      copy(quote)
+      .then(() => {
+     toast.success("copied to clipboard!")
+      })
+      .catch(error => {
+       toast.error('Failed to copy!')
+      })
+    }
+      
+      }>
+      <CopyPasteButton    className="border-accent bg-none flex items-center justify-center size-4 rounded-md  text-primary hover:text-primary" />
+    </div>
+    </div>
+  
   )
 }

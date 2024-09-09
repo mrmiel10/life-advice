@@ -1,19 +1,10 @@
 
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-
-import ShimmerButton from "@/components/magicui/shimmer-button";
-import { Spotlight } from "@/components/Spotlight";
 import { Section } from "@/components/Section";
 import Link from "next/link";
 import { Spacing } from "@/components/Spacing";
 import TextRotate from "@/components/TextRotate";
 import { CardQuote } from "./CardQuote";
-import Info from "./Info";
-import { SelectCategoryCitation } from "./SelectCategoryCitation";
-import { Footer } from "./Footer";
-import logo from "../public/logo.png"
-import { ModeToggle } from "@/Theme/ThemeToggleDropDown";
+
 import { PageProps } from "@/lib/utils";
 import { searchParamsCache } from "@/lib/utils";
 export default function Home(
@@ -32,10 +23,6 @@ export default function Home(
   ]
   return (
     <main className="min-h-screen h-full w-full" >
-      {/* <Spotlight
-        className="-top-40 left-0 md:left-60 md:-top-20"
-        fill="white"
-      />  */}
    
  <Spacing size="md" />
  <Section className="max-w-3xl  flex flex-col">
@@ -46,19 +33,19 @@ export default function Home(
   
     <div className="max-w-xl mt-2  h-fit relative justify-start flex text-primary/80 dark:text-primary-foreground">
       <TextRotate text={text} />
-    {/* <h4 className="text-xl text-center font-semibold tracking-tight">At Life Advice, we believe in small steps leading to big changes. Let us guide you on that path</h4> */}
+   
     </div>
 
  </Section>
  <div className="my-10">
  <Spacing size="sm"   />
  </div>
-{/* <Info /> */}
+
 <CardQuote categoryQuote={categoryQuote} />
 
-{/* <SelectCategoryCitation /> */}
+
 <Spacing size="md"   />
-{/* <Footer /> */}
+
     </main>
   );
 }
