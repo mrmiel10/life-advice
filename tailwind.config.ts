@@ -17,6 +17,11 @@ const config = {
         "2xl": "1400px",
       },
     },
+    fontFamily:{
+      sans: ['var(--font-geist-sans)'],
+      mono: ['var(--font-geist-mono)'],
+      caption:["var(--font-caption)"]
+      },
     extend: {
       colors: {
         border: "hsl(var(--border))",
@@ -58,7 +63,23 @@ const config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+
       keyframes: {
+        spotlight: {
+          "0%": {
+            opacity: 0,
+            transform: "translate(-72%, -62%) scale(0.5)",
+          },
+          "100%": {
+            opacity: 1,
+            transform: "translate(-50%,-40%) scale(1)",
+          },
+        },
+        slide: {
+          to: {
+            transform: "translate(calc(100cqw - 100%), 0)",
+          },
+        },
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -69,6 +90,7 @@ const config = {
         },
       },
       animation: {
+        spotlight: "spotlight 2s ease .75s 1 forwards",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
