@@ -88,7 +88,7 @@ const queryClient = useQueryClient()
     </p>
    
      <div className=" font-semibold">
-     - {q.author} {" "} {q.category}
+     - {q.author} {" "} / {q.category[0].toUpperCase() + q.category.slice(1)}
    </div>
         </>
       ))
