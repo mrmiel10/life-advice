@@ -10,8 +10,10 @@ import { useSearchParams } from 'next/navigation'
 import { useQueryState } from 'nuqs'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import getQuotes from '@/lib/QueryQuotes'
-export const SelectCategoryCitation = ({setQuotes}:
-  {setQuotes:React.Dispatch<React.SetStateAction<TypeQuotesResponseSchema | undefined>>
+export const SelectCategoryCitation = ({setQuotes,isLoading}:
+  {
+    setQuotes:React.Dispatch<React.SetStateAction<TypeQuotesResponseSchema | undefined>>
+    isLoading:boolean
     
   }
 ) => {
@@ -20,8 +22,8 @@ export const SelectCategoryCitation = ({setQuotes}:
     mutationFn:async (category:string) => await getQuotes(category),
 
     onSuccess:(data)=>{
-      setQuotes(data)
-      queryClient.invalidateQueries({ queryKey: ['generateQuotes',category] })
+      // setQuotes(data)
+     //  queryClient.invalidateQueries({ queryKey: ['quotes'] })
     }
   })
   const [category,setCategory] = useQueryState("categoryQuote",{
@@ -73,12 +75,15 @@ export const SelectCategoryCitation = ({setQuotes}:
         <div>
         <div className='flex gap-4 flex-wrap'>
    {BUTTONS_QUOTES.slice(0,displayedBtnQuote).map((btnQuote,index)=>(
-    <ButtonQuote handleChangeCategoryQuote={()=>handleChangeCategoryQuote(btnQuote.content)} key={index} content={btnQuote.content} keyword={btnQuote.keyword} />
+    <ButtonQuote
+     disabled={isLoading || mutation.isPending}  
+    handleChangeCategoryQuote={()=>handleChangeCategoryQuote(btnQuote.content)} key={index} content={btnQuote.content} keyword={btnQuote.keyword} />
    ))}
 </div> 
 <div className='mt-8'>
  { displayedBtnQuote < BUTTONS_QUOTES.length && !isFull ?(
             <Button 
+          
             onClick={handleSeeMore}
            className='bg-primary/80 dark:bg-primpary w-full'
            

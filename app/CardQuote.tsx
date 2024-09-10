@@ -28,14 +28,15 @@ import { Skeleton } from '@/components/ui/skeleton';
 import CopyPasteButton from '@/components/CopyPasteButton';
 import { useCopyToClipboard, useDarkMode } from "usehooks-ts";
 import { toast } from "sonner";
+import { useRouter } from 'next/navigation';
 export  type TypeQuotesResponseSchema = z.infer<typeof QuotesResponseSchema>
 
 export const CardQuote = ({categoryQuote}:{categoryQuote:string}) => {
-  const [quotes,setQuotes] = React.useState<TypeQuotesResponseSchema | undefined>()
-  const {data,isLoading,isError,status,isSuccess} = useQuery({
+   const [quotes,setQuotes] = React.useState<TypeQuotesResponseSchema | undefined>()
+  const {data,isLoading,isError} = useQuery({
     queryFn:async () => {
     const resp =  await getQuotes(categoryQuote)
-    setQuotes(resp)
+   setQuotes(resp)
      return resp
     }
       // setQuotes(result)
@@ -43,21 +44,24 @@ export const CardQuote = ({categoryQuote}:{categoryQuote:string}) => {
     queryKey:["quotes",categoryQuote],
   
   })
-
+const router = useRouter()
   console.log(categoryQuote)
 
 const queryClient = useQueryClient()
 // const { isDarkMode, toggle, enable, disable} = useDarkMode()
- // console.log(data)
+  console.log(data)
   const mutation = useMutation({
     mutationFn:async () => await getQuotes(categoryQuote),
 
     onSuccess:(data)=>{
       setQuotes(data)
-      queryClient.invalidateQueries({ queryKey: ['generateQuotes',categoryQuote] })
+     // router.refresh()
+    //  queryClient.invalidateQueries({ queryKey: ['quotes'] })
+     
     }
   })
   console.log(mutation.data)
+  if(isError || mutation.error) return <p>sssssssss</p>
  
   return (  
      <Section className='max-sm:mt-16 max-w-3xl flex flex-col gap-4 items-center justify-center h-auto '>
@@ -74,7 +78,7 @@ const queryClient = useQueryClient()
          <Card  className="w-full bg-card border-accent border dark:bg-card-foreground">
           
  <CardContent className="pt-4 px-7 pr-3 ">
- {
+ {/* {
   isLoading ||
   mutation.isPending ? (
  null
@@ -85,9 +89,11 @@ const queryClient = useQueryClient()
     ):(
       
       <CopyQuote  quote={quotes![0].quote} />
-    )}
+    )} */}
 
-
+{/* {quotes && (
+  <CopyQuote  quote={quotes![0].quote} />
+)} */}
 
    <div className="flex flex-col gap-4 items-center text-primary ">
      <Quote className="size-12 flex-shrink-0" />
@@ -95,29 +101,31 @@ const queryClient = useQueryClient()
    isLoading ||
     mutation.isPending ? (
      <SkeletonCardQuote />
-    ):
-     isError || 
+    ):isError || 
     mutation.isError ? (
       <div className='flex gap-2 justify-center items-center'>
       <InfoIcon className='size-5' />
     <div>Failed to load or generate quotes.</div> 
     </div>
     ):(
-      quotes?.map((q,index)=>(
-        <>
-          <p className="border-primary border-l-2 pl-6 italic text-primary ">
-          {q.quote}
-    </p>
+      quotes && (
+        quotes.map((q,index)=>(
+          <>
+            <p className="border-primary border-l-2 pl-6 italic text-primary ">
+            {q.quote}
+      </p>
+     
+       <div className=" font-semibold">
+       - {q.author} {" "} / {q.category[0].toUpperCase() + q.category.slice(1)}
+     </div>
+          </>
+        ))
+      
+      )
    
-     <div className=" font-semibold">
-     - {q.author} {" "} / {q.category[0].toUpperCase() + q.category.slice(1)}
-   </div>
-        </>
-      ))
-    
-    )}
+    )
+    }
  
-
    
 
    </div>
@@ -134,7 +142,13 @@ const queryClient = useQueryClient()
  </CardFooter> */}
 </Card>
 <div>
-<SelectCategoryCitation setQuotes={setQuotes} />
+<SelectCategoryCitation
+ isLoading={
+  isLoading
+  || mutation.isPending
+ }
+  setQuotes={setQuotes} 
+  />
 </div>
 
      </Section>

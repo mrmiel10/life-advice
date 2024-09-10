@@ -24,7 +24,7 @@ export const Header = () => {
   return (
     <header className="">
     <Section className="flex items-center">
- 
+
           <Image
       
           src={logo} 
