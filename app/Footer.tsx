@@ -13,7 +13,7 @@ export const Footer = () => {
       <div className='flex-1 flex justify-center'>
            
            <p className='flex gap-1 text-xl '> Crafted with ❤️ by
-            <Link href="#"  className='flex group border-none gap-2 transition-colors'>
+            <Link href="https://github.com/mrmiel10"  className='flex group border-none gap-2 transition-colors'>
             <span className='font-bold'> Mr miel</span>
             <ArrowUpRight
         size={16}
