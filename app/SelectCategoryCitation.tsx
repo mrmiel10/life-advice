@@ -23,7 +23,7 @@ export const SelectCategoryCitation = ({setQuotes,isLoading}:
 
     onSuccess:(data)=>{
       // setQuotes(data)
-     //  queryClient.invalidateQueries({ queryKey: ['quotes'] })
+   queryClient.invalidateQueries({ queryKey: ['quotes'] })
     }
   })
   const [category,setCategory] = useQueryState("categoryQuote",{

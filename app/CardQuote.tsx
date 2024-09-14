@@ -41,7 +41,7 @@ export const CardQuote = ({categoryQuote}:{categoryQuote:string}) => {
     }
       // setQuotes(result)
         ,
-    queryKey:["quotes",categoryQuote],
+    queryKey:["quotes"],
   
   })
 const router = useRouter()
@@ -54,20 +54,20 @@ const queryClient = useQueryClient()
     mutationFn:async () => await getQuotes(categoryQuote),
 
     onSuccess:(data)=>{
-      setQuotes(data)
+   //   setQuotes(data)
      // router.refresh()
-    //  queryClient.invalidateQueries({ queryKey: ['quotes'] })
+      queryClient.invalidateQueries({ queryKey: ['quotes',categoryQuote] })
      
     }
   })
   console.log(mutation.data)
-  if(isError || mutation.error) return <p>sssssssss</p>
+  // if(isError || mutation.error) return <p>sssssssss</p>
  
   return (  
      <Section className='max-sm:mt-16 max-w-3xl flex flex-col gap-4 items-center justify-center h-auto '>
                    <Button 
                    disabled={
-                        isLoading ||
+                    isLoading ||
                     mutation.isPending 
                     }
                    className='bg-primary/80 dark:bg-primary'
@@ -108,8 +108,8 @@ const queryClient = useQueryClient()
     <div>Failed to load or generate quotes.</div> 
     </div>
     ):(
-      quotes && (
-        quotes.map((q,index)=>(
+      data && (
+        data.map((q,index)=>(
           <>
             <p className="border-primary border-l-2 pl-6 italic text-primary ">
             {q.quote}
