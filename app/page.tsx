@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Spacing } from "@/components/Spacing";
 import TextRotate from "@/components/TextRotate";
 import { CardQuote } from "./CardQuote";
-
+import { Spotlight } from "@/components/Spotlight";
 import { PageProps } from "@/lib/utils";
 import { searchParamsCache } from "@/lib/utils";
 export default function Home({ params, searchParams }: PageProps) {
@@ -16,6 +16,7 @@ export default function Home({ params, searchParams }: PageProps) {
   ];
   return (
     <main className="min-h-screen h-full w-full">
+      <Spotlight className="top-5 left-0 md:left-60 md:-top-20" fill="" />
       <Spacing size="md" />
       <Section className="max-w-3xl  flex flex-col">
         <h3 className=" text-4xl font-extrabold tracking-tight md:text-5xl">
